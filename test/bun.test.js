@@ -2,14 +2,14 @@ import assert from "node:assert/strict";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { chromium } from "playwright-core";
+import { chromium } from "playwright";
 import test from "node:test";
-import gwtar from "unplugin-gwtar/bun";
+import gwtar from "gwtar/bun";
 
 test("Bun packages emitted HTML and serves the archive with byte ranges", {
   skip: typeof Bun === "undefined",
 }, async () => {
-  const root = await mkdtemp(join(tmpdir(), "unplugin-gwtar-bun-"));
+  const root = await mkdtemp(join(tmpdir(), "gwtar-bun-"));
   try {
     const html = join(root, "page.html");
     await writeFile(html, '<!doctype html><h1>Bun</h1><script type="module" src="./app.js"></script>');
@@ -52,18 +52,15 @@ test("Bun packages emitted HTML and serves the archive with byte ranges", {
       assert.equal(response.headers.get("content-range"), `bytes ${offset}-${end}/${bytes.length}`);
       assert.deepEqual(Buffer.from(await response.arrayBuffer()), bytes.subarray(offset, end + 1));
 
-      const chromiumPath = process.env.CHROMIUM_PATH;
-      if (chromiumPath) {
-        const browser = await chromium.launch({ executablePath: chromiumPath, args: ["--no-sandbox"] });
-        try {
-          const page = await browser.newPage();
-          await page.goto(url.href, { waitUntil: "commit" });
-          await page.locator('body[data-executed="yes"]').waitFor({ timeout: 6000 });
-          const color = await page.locator("h1").evaluate((node) => getComputedStyle(node).color);
-          assert.equal(color, "rgb(0, 0, 255)");
-        } finally {
-          await browser.close();
-        }
+      const browser = await chromium.launch();
+      try {
+        const page = await browser.newPage();
+        await page.goto(url.href, { waitUntil: "commit" });
+        await page.locator('body[data-executed="yes"]').waitFor({ timeout: 6000 });
+        const color = await page.locator("h1").evaluate((node) => getComputedStyle(node).color);
+        assert.equal(color, "rgb(0, 0, 255)");
+      } finally {
+        await browser.close();
       }
     } finally {
       server.stop(true);

@@ -1,4 +1,4 @@
-# unplugin-gwtar
+# gwtar
 
 Turn a built HTML entry and its local assets into a [Gwtar v1](https://gwern.net/gwtar) archive. Use an adapter with Vite, Bun or webpack when building from a native HTML entry. For other build pipelines, call `gwtar()` on the emitted files. The package uses unplugin 3.7.0 and runs on Node.js 20.19+ within the 20.x series, Node.js 22.12+, and subsequent Node.js releases.
 
@@ -7,14 +7,14 @@ Turn a built HTML entry and its local assets into a [Gwtar v1](https://gwern.net
 Install the supplied npm tarball in your project.
 
 ```sh
-npm install -D ./unplugin-gwtar-0.6.0.tgz
+npm install -D ./gwtar-0.6.0.tgz
 ```
 
 ## Vite 8
 
 ```js
 import { defineConfig } from "vite";
-import gwtar from "unplugin-gwtar/vite";
+import gwtar from "gwtar/vite";
 
 export default defineConfig({
   plugins: [gwtar()],
@@ -31,7 +31,7 @@ Run your production build and open `/index.gwtar.html` on your static server. Fo
 ## Bun
 
 ```js
-import gwtar from "unplugin-gwtar/bun";
+import gwtar from "gwtar/bun";
 
 await Bun.build({
   entrypoints: ["./index.html"],
@@ -44,12 +44,12 @@ await Bun.build({
 
 Run the script with `bun run build.js`. After a successful build, the plugin writes `dist/index.gwtar.html` before the build promise resolves. Use an explicit `outdir` for disk output. The adapter defaults to Bun's `publicPath` when set. Pass `gwtar({ html: "docs/index.html" })` if your build emits the HTML entry at a different path inside `outdir`.
 
-The Bun adapter is tested with Bun 1.4.5. Run `bun test test/bun.test.js` to check it from the source tree.
+The Bun adapter is tested with Bun 1.4.5. Run `npm run test:bun` after setting up the test environment below.
 
 ## webpack
 
 ```js
-import gwtar from "unplugin-gwtar/webpack";
+import gwtar from "gwtar/webpack";
 
 export default {
   entry: { index: "./src/index.html" },
@@ -72,7 +72,7 @@ npx gwtar dist --html guide/index.html --base /docs/
 The CLI defaults to the current directory and `index.html`. It prints the absolute archive path on success. The JavaScript API takes the same inputs. In v0.6.0, the named export `writeGwtar` was renamed to `gwtar`.
 
 ```js
-import { gwtar } from "unplugin-gwtar";
+import { gwtar } from "gwtar";
 
 const path = await gwtar({
   outDir: "dist",
@@ -102,4 +102,13 @@ mkdir extracted
 perl -ne 'print if $tar; $tar=1 if /^<!-- GWTAR END$/' index.gwtar.html | tar -xf - -C extracted
 ```
 
-Run `npm ci && npm test` from the source tree. Set `CHROMIUM_PATH` to a Chromium executable to include browser checks for JavaScript, CSS, lazy assets, byte ranges, and the full-response fallback.
+## Testing
+
+```sh
+npm ci
+npm run test:install
+npm test
+npm run test:bun
+```
+
+Playwright installs the Chromium headless shell revision for the project's Playwright version. The browser tests use this shell to check JavaScript, CSS, lazy assets, byte ranges, and the full-response fallback.

@@ -7,17 +7,17 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { chromium } from "playwright-core";
+import { chromium } from "playwright";
 import { build as vite } from "vite";
 import webpack from "webpack";
-import { unplugin, gwtar } from "unplugin-gwtar";
-import webpackGwtar from "unplugin-gwtar/webpack";
+import { unplugin, gwtar } from "gwtar";
+import webpackGwtar from "gwtar/webpack";
 
 const marker = Buffer.from("<!-- GWTAR END\n");
 const cli = fileURLToPath(new URL("../bin/gwtar.js", import.meta.url));
 
 async function project(t) {
-  const root = await mkdtemp(join(tmpdir(), "unplugin-gwtar-test-"));
+  const root = await mkdtemp(join(tmpdir(), "gwtar-test-"));
   t.after(() => rm(root, { recursive: true, force: true }));
   return root;
 }
@@ -146,7 +146,7 @@ test("Vite packages emitted HTML, JS, linked CSS and nested assets", async (t) =
   }
   await vite({
     root, configFile: false, logLevel: "silent", base: "/docs/",
-    plugins: [(await import("unplugin-gwtar/vite")).default()],
+    plugins: [(await import("gwtar/vite")).default()],
     build: { rolldownOptions: { output: { codeSplitting: false } } },
   });
   const bytes = await readFile(join(root, "dist/index.gwtar.html"));
@@ -156,12 +156,6 @@ test("Vite packages emitted HTML, JS, linked CSS and nested assets", async (t) =
   assert.equal(members.size, 5);
   const lazySource = members.get("index.html").data.toString().match(/<img[^>]+src="\.\/([^"]+)"/)[1];
   const { start: lazyStart, end: lazyEnd } = members.get(lazySource);
-  const chromiumPath = process.env.CHROMIUM_PATH;
-  if (!chromiumPath) {
-    t.diagnostic("Set CHROMIUM_PATH to also verify browser rendering and byte-range behavior.");
-    return;
-  }
-
   const requests = [];
   const server = createServer((request, response) => {
     const url = new URL(request.url, "http://localhost");
@@ -185,7 +179,7 @@ test("Vite packages emitted HTML, JS, linked CSS and nested assets", async (t) =
   });
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   t.after(() => server.close());
-  const browser = await chromium.launch({ executablePath: chromiumPath, args: ["--no-sandbox"] });
+  const browser = await chromium.launch();
   t.after(() => browser.close());
   const page = await browser.newPage();
   page.setDefaultTimeout(10000);

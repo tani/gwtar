@@ -27,7 +27,7 @@ const adapters = createUnplugin((options = {}, { framework }) => {
   }
 
   /** @type {import("unplugin").UnpluginOptions} */
-  const plugin = { name: "unplugin-gwtar" };
+  const plugin = { name: "gwtar" };
   if (framework === "vite") {
     /** @type {import("vite").ResolvedConfig} */
     let config;
@@ -50,7 +50,7 @@ const adapters = createUnplugin((options = {}, { framework }) => {
       compiler.hooks.afterEmit.tapPromise(plugin.name, async (compilation) => {
         if (!compilation.errors.length) {
           const { path, publicPath } = compilation.outputOptions;
-          if (!path) throw new Error("unplugin-gwtar requires webpack to set output.path.");
+          if (!path) throw new Error("gwtar requires webpack to set output.path.");
           if (typeof publicPath === "function" && options.base === undefined) {
             throw new Error("Set the gwtar base option when webpack output.publicPath is a function.");
           }
@@ -62,7 +62,7 @@ const adapters = createUnplugin((options = {}, { framework }) => {
     plugin.bun = {
       setup(build) {
         const { outdir, publicPath } = build.config;
-        if (!outdir) throw new Error("unplugin-gwtar requires Bun.build() to set outdir.");
+        if (!outdir) throw new Error("gwtar requires Bun.build() to set outdir.");
         const directory = resolve(outdir);
         build.onEnd(/** @param {{ success: boolean }} result */ async (result) => {
           if (result.success) await pack(directory, publicPath);

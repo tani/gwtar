@@ -1,5 +1,5 @@
 {
-  "name": "unplugin-gwtar",
+  "name": "gwtar",
   "version": "0.6.0",
   "description": "Package static HTML builds as range-loadable Gwtar archives",
   "type": "module",
@@ -31,7 +31,9 @@
     "README.md"
   ],
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "test:bun": "bun test test/bun.test.js",
+    "test:install": "playwright install --only-shell chromium"
   },
   "dependencies": {
     "entities": "9.0.0",
@@ -40,7 +42,8 @@
     "unplugin": "3.7.0"
   },
   "devDependencies": {
-    "playwright-core": "^1.65.1",
+    "bun": "^1.4.5",
+    "playwright": "^1.65.1",
     "vite": "^8.3.8",
     "webpack": "^5.113.0"
   }
