@@ -81,6 +81,8 @@ const path = await gwtar({
 });
 ```
 
+The JavaScript entry points declare their types with JSDoc. TypeScript projects consuming the installed package can enable inference with `allowJs: true` and `maxNodeModuleJsDepth: 1` in `compilerOptions`.
+
 | Option | Default | Meaning |
 | --- | --- | --- |
 | `html` | `index.html` | HTML entry relative to the output directory. The archive is written beside it. |

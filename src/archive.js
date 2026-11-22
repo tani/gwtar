@@ -291,7 +291,11 @@ window.stop();
   return Buffer.from(render(overhead, overhead + tarLength));
 }
 
-/** Package one built HTML page and return the absolute archive path. */
+/**
+ * Package one built HTML page and return the absolute archive path.
+ * @param {import("../index.js").WriteGwtarOptions} options
+ * @returns {Promise<string>}
+ */
 export async function gwtar(options) {
   const { outDir, html = "index.html", base = "/" } = options;
   const root = await realpath(resolve(outDir));

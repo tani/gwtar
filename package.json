@@ -11,25 +11,20 @@
   },
   "exports": {
     ".": {
-      "types": "./index.d.ts",
       "import": "./index.js"
     },
     "./vite": {
-      "types": "./adapters/vite.d.ts",
       "import": "./adapters/vite.js"
     },
     "./webpack": {
-      "types": "./adapters/webpack.d.ts",
       "import": "./adapters/webpack.js"
     },
     "./bun": {
-      "types": "./adapters/bun.d.ts",
       "import": "./adapters/bun.js"
     }
   },
   "files": [
     "index.js",
-    "index.d.ts",
     "adapters",
     "bin",
     "src",
