@@ -1,0 +1,52 @@
+{
+  "name": "unplugin-gwtar",
+  "version": "0.6.0",
+  "description": "Package static HTML builds as range-loadable Gwtar archives",
+  "type": "module",
+  "bin": {
+    "gwtar": "./bin/gwtar.js"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./vite": {
+      "types": "./adapters/vite.d.ts",
+      "import": "./adapters/vite.js"
+    },
+    "./webpack": {
+      "types": "./adapters/webpack.d.ts",
+      "import": "./adapters/webpack.js"
+    },
+    "./bun": {
+      "types": "./adapters/bun.d.ts",
+      "import": "./adapters/bun.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "adapters",
+    "bin",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "entities": "9.0.0",
+    "mime": "^4.1.2",
+    "prettier": "3.10.1",
+    "unplugin": "3.7.0"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.65.1",
+    "vite": "^8.3.8",
+    "webpack": "^5.113.0"
+  }
+}
