@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { chromium } from "playwright";
 import test from "node:test";
-import gwtar from "gwtar/bun";
+import gwtar from "@nodefu/gwtar/bun";
 
 test("Bun packages emitted HTML and serves the archive with byte ranges", {
   skip: typeof Bun === "undefined",

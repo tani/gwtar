@@ -1,5 +1,5 @@
 {
-  "name": "gwtar",
+  "name": "@nodefu/gwtar",
   "version": "0.6.0",
   "description": "Package static HTML builds as range-loadable Gwtar archives",
   "type": "module",

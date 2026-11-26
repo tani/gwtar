@@ -10,8 +10,8 @@ import test from "node:test";
 import { chromium } from "playwright";
 import { build as vite } from "vite";
 import webpack from "webpack";
-import { unplugin, gwtar } from "gwtar";
-import webpackGwtar from "gwtar/webpack";
+import { unplugin, gwtar } from "@nodefu/gwtar";
+import webpackGwtar from "@nodefu/gwtar/webpack";
 
 const marker = Buffer.from("<!-- GWTAR END\n");
 const cli = fileURLToPath(new URL("../bin/gwtar.js", import.meta.url));
@@ -146,7 +146,7 @@ test("Vite packages emitted HTML, JS, linked CSS and nested assets", async (t) =
   }
   await vite({
     root, configFile: false, logLevel: "silent", base: "/docs/",
-    plugins: [(await import("gwtar/vite")).default()],
+    plugins: [(await import("@nodefu/gwtar/vite")).default()],
     build: { rolldownOptions: { output: { codeSplitting: false } } },
   });
   const bytes = await readFile(join(root, "dist/index.gwtar.html"));

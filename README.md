@@ -7,14 +7,14 @@ Turn a built HTML entry and its local assets into a [Gwtar v1](https://gwern.net
 Install the supplied npm tarball in your project.
 
 ```sh
-npm install -D ./gwtar-0.6.0.tgz
+npm install -D ./nodefu-gwtar-0.6.0.tgz
 ```
 
 ## Vite 8
 
 ```js
 import { defineConfig } from "vite";
-import gwtar from "gwtar/vite";
+import gwtar from "@nodefu/gwtar/vite";
 
 export default defineConfig({
   plugins: [gwtar()],
@@ -31,7 +31,7 @@ Run your production build and open `/index.gwtar.html` on your static server. Fo
 ## Bun
 
 ```js
-import gwtar from "gwtar/bun";
+import gwtar from "@nodefu/gwtar/bun";
 
 await Bun.build({
   entrypoints: ["./index.html"],
@@ -49,7 +49,7 @@ The Bun adapter is tested with Bun 1.4.5. Run `npm run test:bun` after setting u
 ## webpack
 
 ```js
-import gwtar from "gwtar/webpack";
+import gwtar from "@nodefu/gwtar/webpack";
 
 export default {
   entry: { index: "./src/index.html" },
@@ -65,14 +65,14 @@ The adapter is tested with webpack 5.113.0 and its native HTML entry support. Th
 For Rollup, Rolldown, esbuild, Rspack or any other build pipeline, write the HTML and its assets to disk and then run `gwtar`. This also works for prebuilt static sites.
 
 ```sh
-npx gwtar dist
-npx gwtar dist --html guide/index.html --base /docs/
+npx @nodefu/gwtar dist
+npx @nodefu/gwtar dist --html guide/index.html --base /docs/
 ```
 
 The CLI defaults to the current directory and `index.html`. It prints the absolute archive path on success. The JavaScript API takes the same inputs. In v0.6.0, the named export `writeGwtar` was renamed to `gwtar`.
 
 ```js
-import { gwtar } from "gwtar";
+import { gwtar } from "@nodefu/gwtar";
 
 const path = await gwtar({
   outDir: "dist",
